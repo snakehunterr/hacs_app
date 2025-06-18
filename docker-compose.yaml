@@ -6,8 +6,8 @@ services:
       context: mysql
       dockerfile: ./Dockerfile
       args:
-       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-       - MYSQL_DATABASE_NAME=${MYSQL_DATABASE_NAME}
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - MYSQL_DATABASE_NAME=${MYSQL_DATABASE_NAME}
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
@@ -29,12 +29,12 @@ services:
       context: api_server
       dockerfile: ./Dockerfile
     environment:
-     - MYSQL_USER=root
-     - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD}
-     - MYSQL_HOST=hacs_mysql
-     - MYSQL_PORT=3306
-     - MYSQL_DATABASE=${MYSQL_DATABASE_NAME}
-     - DBAPI_SERVER_PORT=${DBAPI_SERVER_PORT}
+      - MYSQL_USER=${MYSQL_USER_NAME}
+      - MYSQL_PASSWORD=${MYSQL_USER_PASSWORD}
+      - MYSQL_HOST=hacs_mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=${MYSQL_DATABASE_NAME}
+      - DBAPI_SERVER_PORT=${DBAPI_SERVER_PORT}
     ports:
       - "${DBAPI_SERVER_PORT}:${DBAPI_SERVER_PORT}"
 

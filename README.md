@@ -1,0 +1,15 @@
+# hacs app
+
+## example of .env file
+
+```.env
+TELEBOT_KEY=
+PAYMENT_KEY=
+
+MYSQL_USER_NAME=
+MYSQL_USER_PASSWORD=
+MYSQL_DATABASE_NAME=
+MYSQL_PORT=
+
+DBAPI_SERVER_PORT=
+```

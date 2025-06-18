@@ -8,9 +8,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	types "github.com/snakehunterr/hacs_app/db_types"
-	api_errors "github.com/snakehunterr/hacs_app/db_types/errors"
-	validators "github.com/snakehunterr/hacs_app/db_types/validators"
+	types "github.com/snakehunterr/hacs_db_types"
+	api_errors "github.com/snakehunterr/hacs_db_types/errors"
+	validators "github.com/snakehunterr/hacs_db_types/validators"
 )
 
 func clientScanRow(c *types.Client, row *sql.Row) error {

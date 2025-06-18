@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	types "github.com/snakehunterr/hacs_app/db_types"
-	api_errors "github.com/snakehunterr/hacs_app/db_types/errors"
-	validators "github.com/snakehunterr/hacs_app/db_types/validators"
+	types "github.com/snakehunterr/hacs_db_types"
+	api_errors "github.com/snakehunterr/hacs_db_types/errors"
+	validators "github.com/snakehunterr/hacs_db_types/validators"
 )
 
 func paymentScanRow(p *types.Payment, row *sql.Row) error {

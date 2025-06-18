@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
-	api_errors "github.com/snakehunterr/hacs_app/db_types/errors"
+	api_errors "github.com/snakehunterr/hacs_db_types/errors"
 )
 
 var (
