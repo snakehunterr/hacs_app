@@ -1,0 +1,1015 @@
+basePath: /api
+definitions:
+  errors.APIError:
+    properties:
+      code:
+        $ref: '#/definitions/errors.APIErrorCode'
+      error:
+        type: string
+    type: object
+  errors.APIErrorCode:
+    enum:
+    - 1
+    - 2
+    - 3
+    - 4
+    type: integer
+    x-enum-varnames:
+    - ErrCodeMissingParam
+    - ErrCodeIncorrectParam
+    - ErrCodeSQLNoRows
+    - ErrCodeSQLInternalError
+  types.APIResponse:
+    properties:
+      error:
+        $ref: '#/definitions/errors.APIError'
+      message:
+        type: string
+    type: object
+  types.Client:
+    properties:
+      client_id:
+        type: integer
+      client_name:
+        type: string
+      is_admin:
+        type: boolean
+      last_edited:
+        type: string
+    type: object
+  types.Expense:
+    properties:
+      expense_amount:
+        type: number
+      expense_date:
+        type: string
+      expense_id:
+        type: integer
+      last_edited:
+        type: string
+    type: object
+  types.Payment:
+    properties:
+      client_id:
+        type: integer
+      last_edited:
+        type: string
+      payment_amount:
+        type: number
+      payment_date:
+        type: string
+      payment_id:
+        type: integer
+      room_id:
+        type: integer
+    type: object
+  types.Room:
+    properties:
+      client_id:
+        type: integer
+      last_edited:
+        type: string
+      room_area:
+        type: number
+      room_id:
+        type: integer
+      room_people_count:
+        type: integer
+    type: object
+info:
+  contact: {}
+  title: HACS database API
+  version: "1.0"
+paths:
+  /client/admins:
+    get:
+      description: Get all admin clients
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Client'
+            type: array
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get all admin clients
+      tags:
+      - client
+  /client/all:
+    get:
+      description: Get all clients
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Client'
+            type: array
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get all clients
+      tags:
+      - client
+  /client/id/{id}:
+    delete:
+      description: Delete client by telegram ID
+      parameters:
+      - description: Client telegram ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Delete client
+      tags:
+      - client
+    get:
+      description: Get client by telegram ID
+      parameters:
+      - description: Telegram ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/types.Client'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get client by telegram ID
+      tags:
+      - client
+    patch:
+      description: Patch client by client_id
+      parameters:
+      - description: Client ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Client name
+        in: formData
+        name: client_name
+        type: string
+      - description: is admin
+        in: formData
+        name: is_admin
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Patch client
+      tags:
+      - client
+    post:
+      description: Create new client
+      parameters:
+      - description: Client telegram ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Client name
+        in: formData
+        name: client_name
+        required: true
+        type: string
+      - description: Is admin
+        in: formData
+        name: is_admin
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: New client
+          schema:
+            $ref: '#/definitions/types.Client'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Create new client
+      tags:
+      - client
+  /client/name/{name}:
+    get:
+      description: Get clients by client_name
+      parameters:
+      - description: Client name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Client'
+            type: array
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get clients by client_name
+      tags:
+      - client
+  /expense/all:
+    get:
+      description: Get all expenses
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Expense'
+            type: array
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get all expenses
+      tags:
+      - expense
+  /expense/date/{date}:
+    get:
+      description: Get expenses by expense_date
+      parameters:
+      - description: Expense date
+        in: path
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Expense'
+            type: array
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get expenses by expense_date
+      tags:
+      - expense
+  /expense/date/range:
+    post:
+      description: Get expenses by date range
+      parameters:
+      - description: Expense date start
+        in: formData
+        name: date_start
+        required: true
+        type: string
+      - description: Expense date end
+        in: formData
+        name: date_end
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Expense'
+            type: array
+        "400":
+          description: Incorrect parameter
+          schema:
+            type: objcet
+        "404":
+          description: No rows
+          schema:
+            type: objcet
+        "500":
+          description: Internal server error
+          schema:
+            type: objcet
+      summary: Get expenses by date range
+      tags:
+      - expense
+  /expense/id/{id}:
+    delete:
+      description: Delete expense by expense_id
+      parameters:
+      - description: Expense ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Delete expense by expense_id
+      tags:
+      - expense
+    get:
+      description: Get expense by expense_id
+      parameters:
+      - description: Expense ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/types.Expense'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get expense by expense_id
+      tags:
+      - expense
+    patch:
+      description: Patch expense by expense_id
+      parameters:
+      - description: Expense ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Date 'yyyy-mm-dd hh:mm:ss'
+        in: formData
+        name: expense_date
+        type: string
+      - description: Amount
+        in: formData
+        name: expense_amount
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Patch expense
+      tags:
+      - expense
+  /expense/new:
+    post:
+      description: Create new expense
+      parameters:
+      - description: Expense date
+        in: formData
+        name: expense_date
+        type: string
+      - description: Expense amount
+        in: formData
+        name: expense_amount
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: New expense
+          schema:
+            $ref: '#/definitions/types.Expense'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Create new expense
+      tags:
+      - expense
+  /payment/all:
+    get:
+      description: Get all payments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Payment'
+            type: array
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get all payments
+      tags:
+      - payment
+  /payment/client/id/{id}:
+    get:
+      description: Get all payments by client_id
+      parameters:
+      - description: Client ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Payment'
+            type: array
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get all payments by client_id
+      tags:
+      - payment
+  /payment/date/{date}:
+    get:
+      description: Get payment by date
+      parameters:
+      - description: Date 'yyyy-mm-dd hh:mm:ss'
+        in: path
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Payment'
+            type: array
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get payment by date
+      tags:
+      - payment
+  /payment/date/range:
+    post:
+      description: Get payment by date range
+      parameters:
+      - description: Date 'yyyy-mm-dd hh:mm:ss'
+        in: formData
+        name: date_start
+        required: true
+        type: string
+      - description: Date 'yyyy-mm-dd hh:mm:ss'
+        in: formData
+        name: date_end
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Payment'
+            type: array
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get payment by date range
+      tags:
+      - payment
+  /payment/id/{id}:
+    delete:
+      description: Delete payment by payment_id
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Delete payment
+      tags:
+      - payment
+    get:
+      description: Get payment by payment_id
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/types.Payment'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get payment by payment_id
+      tags:
+      - payment
+    patch:
+      description: Patch payment by payment_id
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Client ID
+        in: formData
+        name: client_id
+        type: integer
+      - description: Room ID
+        in: formData
+        name: room_id
+        type: integer
+      - description: Date 'yyyy-mm-dd hh:mm:ss'
+        in: formData
+        name: payment_date
+        type: string
+      - description: Payment amount
+        in: formData
+        name: payment_amount
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Patch payment
+      tags:
+      - payment
+  /payment/new:
+    post:
+      description: Create new payment
+      parameters:
+      - description: Client ID
+        in: formData
+        name: client_id
+        required: true
+        type: integer
+      - description: Room ID
+        in: formData
+        name: room_id
+        required: true
+        type: integer
+      - description: Date 'yyyy-mm-dd hh:mm:ss'
+        in: formData
+        name: payment_date
+        type: string
+      - description: Amount
+        in: formData
+        name: payment_amount
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: New payment
+          schema:
+            $ref: '#/definitions/types.Payment'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Create new payment
+      tags:
+      - payment
+  /payment/room/id/{id}:
+    get:
+      description: Get all payments by room_id
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Payment'
+            type: array
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get all payments by room_id
+      tags:
+      - payment
+  /room/all:
+    get:
+      description: Get all rooms from MySQL
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Room'
+            type: array
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get all rooms
+      tags:
+      - room
+  /room/client/id/{id}:
+    get:
+      description: Get rooms by client_id
+      parameters:
+      - description: Client ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            items:
+              $ref: '#/definitions/types.Room'
+            type: array
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get rooms by client_id
+      tags:
+      - room
+  /room/id/{id}:
+    delete:
+      description: Delete room by room_id
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Delete room by room_id
+      tags:
+      - room
+    get:
+      description: Get room by room_id
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/types.Room'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: No rows
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Get room by room_id
+      tags:
+      - room
+    patch:
+      description: Patch room by room_id
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Client ID
+        in: formData
+        name: client_id
+        type: integer
+      - description: Room area
+        in: formData
+        name: room_area
+        type: number
+      - description: People living in room
+        in: formData
+        name: room_people_count
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "404":
+          description: Record not founded in DB
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Patch room
+      tags:
+      - room
+    post:
+      description: Create new room
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Client ID
+        in: formData
+        name: client_id
+        required: true
+        type: integer
+      - description: People living in room
+        in: formData
+        name: room_people_count
+        required: true
+        type: integer
+      - description: Room area
+        in: formData
+        name: room_area
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "400":
+          description: Incorrect parameter
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/types.APIResponse'
+      summary: Create new room
+      tags:
+      - room
+produces:
+- application/json
+swagger: "2.0"

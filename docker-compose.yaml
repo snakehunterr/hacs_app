@@ -1,0 +1,42 @@
+services:
+  mysql:
+    container_name: hacs_mysql
+    restart: always
+    build:
+      context: mysql
+      dockerfile: ./Dockerfile
+      args:
+       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+       - MYSQL_DATABASE_NAME=${MYSQL_DATABASE_NAME}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORT}:3306"
+  telebot:
+    container_name: hacs_telegram_bot
+    restart: always
+    build:
+      context: telegram_bot
+      dockerfile: ./Dockerfile
+    environment:
+      - TELEBOT_KEY=${TELEBOT_KEY}
+      - DBAPI_SERVER_HOST=hacs_dbapi_server
+      - DBAPI_SERVER_PORT=${DBAPI_SERVER_PORT}
+  server:
+    container_name: hacs_api_server
+    restart: always
+    build:
+      context: api_server
+      dockerfile: ./Dockerfile
+    environment:
+     - MYSQL_USER=root
+     - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD}
+     - MYSQL_HOST=hacs_mysql
+     - MYSQL_PORT=3306
+     - MYSQL_DATABASE=${MYSQL_DATABASE_NAME}
+     - DBAPI_SERVER_PORT=${DBAPI_SERVER_PORT}
+    ports:
+      - "${DBAPI_SERVER_PORT}:${DBAPI_SERVER_PORT}"
+
+volumes:
+  mysql_data:

@@ -1,0 +1,8 @@
+github.com/go-telegram/bot v1.14.1 h1:ySVCITvYsvBSiChOmr6GolLUcWX2T/ugykc2rjIaaQg=
+github.com/go-telegram/bot v1.14.1/go.mod h1:i2TRs7fXWIeaceF3z7KzsMt/he0TwkVC680mvdTFYeM=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
+github.com/snakehunterr/hacs_dbapi_client v1.0.0 h1:rXGBdmvg066U0I8KvArW65H/Jx2whthuAcm4S90RSNM=
+github.com/snakehunterr/hacs_dbapi_client v1.0.0/go.mod h1:lnIViEabYQyTNtXAMhxqNnftWDvdc15N3L8xRBQSFCs=
+github.com/snakehunterr/hacs_dbapi_types v0.2.0 h1:VYJKFe90/QA+kGzHk33S669/ENIqhh3cAM7wnCmF9Is=
+github.com/snakehunterr/hacs_dbapi_types v0.2.0/go.mod h1:rboDxDiSVl8BU2/GJCemBYLVL8ScuUIHhpFod5uMq2Y=
